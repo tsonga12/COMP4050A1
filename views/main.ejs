@@ -53,7 +53,7 @@
   <br>
 
   <%for(var i=0; i< 20;i++){%>
-  <button type="button" class="collapsible">Title: <%= questionTitle[i]%>, Creation day: <%= creationDay[i] %>, Vote(s): <%= voteNum[i] %></button>
+  <button type="button" class="collapsible">Title: <%= questionTitle[i]%>, Creation day: <%= new Date(creationDay[i]*1000) %>, Vote(s): <%= voteNum[i] %></button>
   <div class="content">
     <p class="questionBody"><b>Question body:</b> <%-questionBody[i]%>
 
@@ -62,22 +62,19 @@
               <%for(var j=0; j< answer.length;j++){%>
                 <%if(answer!="Not applicable"){%>
                     <b class="AllAnswers">Question's answer</b><br>
-                   Creation date: <%= answer[j].creation_date%><br>
+                   Creation date: <%=  new Date(answer[j].creation_date*1000);%><br>
                    Vote(s): <%= answer[j].score%><br>
                    Answer body: <%- answer[j].body%><br><br>
                   <%if(answer[j].comments!=undefined){%>
                        <%answer[j].comments.forEach(function(comment){%>
 
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b class="answerComment">Answer's comment</b><br>
-                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creation date:<%= comment.creation_date%><br>
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b class="answerComment">Answer's comment</b><br>
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creation date:<%= new Date(comment.creation_date*1000)%><br>
                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vote(s): <%= comment.score%><br>
                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer body: <%- comment.body%><br><br>
-
                        <%})%>
                   <%}%>
                 <%}%>
-
-
               <%}%>
              <%})%>
 
@@ -86,16 +83,13 @@
            <%for(var l=0; l< comment.length;l++){%>
              <%if(comment!="Not applicable"){%>
                <b class = "questionsComment">Comments for the question:</b><br>
-                Creation date: <%= comment[l].creation_date%><br>
+                Creation date: <%= new Date(comment[l].creation_date*1000)%><br>
                 Vote(s): <%= comment[l].score%><br>
                 Comment body: <%- comment[l].body%><br><br>
               <%}%>
             <%}%>
           <%})%>
-
-
       </p>
-
       </div>
     <%}%>
       <script>
@@ -114,7 +108,6 @@
           });
         }
       </script>
-
 </body>
 
 </html>
