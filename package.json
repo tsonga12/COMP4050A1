@@ -1,0 +1,19 @@
+{
+  "name": "comp4350a1",
+  "version": "1.0.0",
+  "description": "The application that helps users search for the most 10 newest questions and 10 most voted related questions posted on Stackoverflow website in the past week.  ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Duc Anh Nguyen-7825814-nguyenda@myumanitoba.ca",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "decompress-response": "^7.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "zlib": "^1.0.5"
+  }
+}

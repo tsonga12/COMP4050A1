@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stack Overflow questions explore</title>
+  <style>
+    .collapsible {
+      background-color: #777;
+      color: white;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .active,
+    .collapsible:hover {
+      background-color: #555;
+    }
+
+    .content {
+      padding: 0 18px;
+      display: none;
+      overflow: hidden;
+      background-color: #f1f1f1;
+    }
+    .questionBody{
+      background-color: skyblue;
+    }
+    .AllAnswers{
+          background-color: limegreen;
+    }
+
+    .answerComment{
+      background-color: seagreen;
+    }
+    .questionsComment{
+      background-color: darkorange;
+    }
+  </style>
+</head>
+
+<body>
+
+  <form class="item" action="/" method="post">
+    <input type="text" placeholder="Type in keyword" name="keyword" autocomplete="off" required pattern=".*\S+.*" />
+    <button type="submit">Search</button>
+  </form>
+  <br>
+
+  <%for(var i=0; i< 20;i++){%>
+  <button type="button" class="collapsible">Title: <%= questionTitle[i]%>, Creation day: <%= creationDay[i] %>, Vote(s): <%= voteNum[i] %></button>
+  <div class="content">
+    <p class="questionBody"><b>Question body:</b> <%-questionBody[i]%>
+
+
+            <% answers.forEach(function(answer) { %>
+              <%for(var j=0; j< answer.length;j++){%>
+                <%if(answer!="Not applicable"){%>
+                    <b class="AllAnswers">Question's answer</b><br>
+                   Creation date: <%= answer[j].creation_date%><br>
+                   Vote(s): <%= answer[j].score%><br>
+                   Answer body: <%- answer[j].body%><br><br>
+                  <%if(answer[j].comments!=undefined){%>
+                       <%answer[j].comments.forEach(function(comment){%>
+
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b class="answerComment">Answer's comment</b><br>
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creation date:<%= comment.creation_date%><br>
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vote(s): <%= comment.score%><br>
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer body: <%- comment.body%><br><br>
+
+                       <%})%>
+                  <%}%>
+                <%}%>
+
+
+              <%}%>
+             <%})%>
+
+
+         <% comments.forEach(function(comment) { %>
+           <%for(var l=0; l< comment.length;l++){%>
+             <%if(comment!="Not applicable"){%>
+               <b class = "questionsComment">Comments for the question:</b><br>
+                Creation date: <%= comment[l].creation_date%><br>
+                Vote(s): <%= comment[l].score%><br>
+                Comment body: <%- comment[l].body%><br><br>
+              <%}%>
+            <%}%>
+          <%})%>
+
+
+      </p>
+
+      </div>
+    <%}%>
+      <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+              content.style.display = "none";
+            } else {
+              content.style.display = "block";
+            }
+          });
+        }
+      </script>
+
+</body>
+
+</html>
