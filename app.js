@@ -24,6 +24,7 @@ app.get("/", (req,res)=>{
   if(keyWord!= null){
       let chunks=[]
        const url ="https://api.stackexchange.com/2.2/search?fromdate=1614556800&todate=1615075200&order=desc&sort=creation&tagged="+keyWord+"&site=stackoverflow&filter=!-NKU34xLhG5N9D)KWaUu_Wjf.FWepB)_T#";
+       const begin = Date.now();
        https.get(url, (response)=> {
             response= decompressResponse(response);
             response.on("data", (question)=>{
@@ -35,7 +36,7 @@ app.get("/", (req,res)=>{
 
               loadUpData();
               // console.log(commentsList);
-              res.render('main', {questionTitle: questionTitleList, creationDay: creationDayList, voteNum: scoreList,questionBody:questionsBodyList, answers: answersList,comments: commentsList});
+              res.render('main', {questionTitle: questionTitleList, creationDay: creationDayList, voteNum: scoreList,questionBody:questionsBodyList, answers: answersList,comments: commentsList, responseTime: Date.now() - begin});
             })
 
 

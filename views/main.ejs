@@ -51,7 +51,7 @@
     <button type="submit">Search</button>
   </form>
   <br>
-
+  <%const begin = Date.now();%>
   <%for(var i=0; i< 20;i++){%>
   <button type="button" class="collapsible">Title: <%= questionTitle[i]%>, Creation day: <%= new Date(creationDay[i]*1000) %>, Vote(s): <%= voteNum[i] %></button>
   <div class="content">
@@ -92,10 +92,11 @@
       </p>
       </div>
     <%}%>
+
+    <p>Response time: <%=responseTime + Date.now()-begin%> ms</p>
       <script>
         var coll = document.getElementsByClassName("collapsible");
         var i;
-
         for (i = 0; i < coll.length; i++) {
           coll[i].addEventListener("click", function() {
             this.classList.toggle("active");
