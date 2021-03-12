@@ -8,42 +8,62 @@ const app = express();
 app.use(compress());
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
+app.use(express.static("public"));
 
 var keyWord;
-var questionsList= new Array();
-var questionTitleList=new Array(20);
-var creationDayList=new Array(20);
-var scoreList=new Array(20);
-var commentsList = new Array();
-var answersList = new Array();
-var questionsBodyList = new Array(20);
+var newestQuestionsList= new Array(10);
+var mostVotedQuestionsList= new Array(10);
+var questionTitleList=new Array(10);
+var creationDayList=new Array(10);
+var scoreList=new Array(10);
+var commentsList = new Array(10);
+var answersList = new Array(10);
+var questionsBodyList = new Array(10);
+
+var questionTitleList2=new Array(10);
+var creationDayList2=new Array(10);
+var scoreList2=new Array(10);
+var commentsList2 = new Array(10);
+var answersList2 = new Array(10);
+var questionsBodyList2 = new Array(10);
 
 
 app.get("/", (req,res)=>{
 
   if(keyWord!= null){
-      let chunks=[]
-       const url ="https://api.stackexchange.com/2.2/search?fromdate=1614556800&todate=1615075200&order=desc&sort=creation&tagged="+keyWord+"&site=stackoverflow&filter=!-NKU34xLhG5N9D)KWaUu_Wjf.FWepB)_T#";
+      let chunksForNewestQuestions=[];
+
+      let chunksForMostVotedQuestions=[];
+       const newestUrl ="https://api.stackexchange.com/2.2/search?pagesize=10&order=desc&sort=creation&tagged="+keyWord+"&site=stackoverflow&filter=!2vBpbPvTC62b)tq6X2x_Lk2DUOWAhgy(2btm*WV3ba";
+       const mostVotedUrl ="https://api.stackexchange.com/2.2/search?pagesize=10&fromdate=1614902400&todate=1615420800&order=desc&sort=votes&tagged="+keyWord+"&site=stackoverflow&filter=!2vBpbPvTC62b)tq6X2x_Lk2DUOWAhgy(2btm*WV3ba";
+
        const begin = Date.now();
-       https.get(url, (response)=> {
+       https.get(newestUrl, (response)=> {
             response= decompressResponse(response);
             response.on("data", (question)=>{
-                 chunks.push(question)
+                 chunksForNewestQuestions.push(question)
             }).on("end",()=>{
-              let allQuestions  = Buffer.concat(chunks);
-              questionsList = JSON.parse(allQuestions);
-
-
-              loadUpData();
-              // console.log(commentsList);
-              res.render('main', {questionTitle: questionTitleList, creationDay: creationDayList, voteNum: scoreList,questionBody:questionsBodyList, answers: answersList,comments: commentsList, responseTime: Date.now() - begin});
+              let allQuestions  = Buffer.concat(chunksForNewestQuestions);
+              newestQuestionsList = JSON.parse(allQuestions);
+              loadUpDataForNewestQuestions();
+              https.get(mostVotedUrl, (response2)=> {
+                   response2= decompressResponse(response2);
+                   response2.on("data", (question2)=>{
+                        chunksForMostVotedQuestions.push(question2)
+                   }).on("end",()=>{
+                     let allQuestions  = Buffer.concat(chunksForMostVotedQuestions);
+                     mostVotedQuestionsList = JSON.parse(allQuestions);
+                     sortMostVotedQuestionsByDate();
+                     loadUpDataForMostVotedQuestions();
+                     res.render('main', {questionTitle2: questionTitleList2, creationDay2: creationDayList2, voteNum2: scoreList2,questionBody2:questionsBodyList2,
+                        answers2: answersList2,comments2: commentsList2, responseTime: Date.now() - begin,questionTitle: questionTitleList, creationDay: creationDayList, voteNum: scoreList,questionBody:questionsBodyList, answers: answersList,comments: commentsList});
+                   })
+                   })
             })
+        })
 
 
-            })
 
-// items[2].comments[0].body
-// items[2].answers[0].comments[0].body
 
  }else{
    res.sendFile(__dirname + "/index.html");
@@ -51,23 +71,61 @@ app.get("/", (req,res)=>{
 
 })
 
-function loadUpData(){
-  for (var i = 0; i < 20; i++) {
-      questionTitleList[i]=questionsList.items[i].title;
-      creationDayList[i]= questionsList.items[i].creation_date;
-      scoreList[i]=questionsList.items[i].score;
-      questionsBodyList[i]=questionsList.items[i].body;
+function sortMostVotedQuestionsByDate(){
+  for (var i = 0; i <10 ; i++) {
+    let max =i;
+    for (var j = i+1; j < 10; j++) {
+      if (mostVotedQuestionsList.items[max].creation_date < mostVotedQuestionsList.items[j].creation_date) {
+                max = j;
+      }
+    }
+    if (max !== i) {
+            let tmp = mostVotedQuestionsList.items[i];
+            mostVotedQuestionsList.items[i] = mostVotedQuestionsList.items[max];
+            mostVotedQuestionsList.items[max] = tmp;
+        }
+  }
+}
 
-      if(questionsList.items[i].comments!=undefined){
-        commentsList[i]=questionsList.items[i].comments;
+
+function loadUpDataForNewestQuestions(){
+  for (var i = 0; i < 10; i++) {
+      questionTitleList[i]=newestQuestionsList.items[i].title;
+      creationDayList[i]= newestQuestionsList.items[i].creation_date;
+      scoreList[i]=newestQuestionsList.items[i].score;
+      questionsBodyList[i]=newestQuestionsList.items[i].body;
+
+      if(newestQuestionsList.items[i].comments!=undefined){
+        commentsList[i]=newestQuestionsList.items[i].comments;
       }else{
           commentsList[i]="Not applicable";
       }
 
-      if (questionsList.items[i].answers!=undefined) {
-          answersList[i]= questionsList.items[i].answers;
+      if (newestQuestionsList.items[i].answers!=undefined) {
+          answersList[i]= newestQuestionsList.items[i].answers;
       }else {
         answersList[i]="Not applicable";
+      }
+  }
+}
+
+function loadUpDataForMostVotedQuestions(){
+  for (var i = 0; i < 10; i++) {
+      questionTitleList2[i]=mostVotedQuestionsList.items[i].title;
+      creationDayList2[i]= mostVotedQuestionsList.items[i].creation_date;
+      scoreList2[i]=mostVotedQuestionsList.items[i].score;
+      questionsBodyList2[i]=mostVotedQuestionsList.items[i].body;
+
+      if(mostVotedQuestionsList.items[i].comments!=undefined){
+        commentsList2[i]=mostVotedQuestionsList.items[i].comments;
+      }else{
+          commentsList2[i]="Not applicable";
+      }
+
+      if (mostVotedQuestionsList.items[i].answers!=undefined) {
+          answersList2[i]= mostVotedQuestionsList.items[i].answers;
+      }else {
+        answersList2[i]="Not applicable";
       }
 
 
@@ -76,10 +134,9 @@ function loadUpData(){
 
 app.post("/",(req,res)=>{
   keyWord=req.body.keyword;
-  console.log(keyWord);
   res.redirect("/");
 })
 
-app.listen(3000,()=>{
-     console.log("server is running on port 3000")
+app.listen(8080,()=>{
+     console.log("server is running on port 8080");
 })

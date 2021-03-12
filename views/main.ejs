@@ -4,44 +4,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Stack Overflow questions explore</title>
-  <style>
-    .collapsible {
-      background-color: #777;
-      color: white;
-      cursor: pointer;
-      padding: 18px;
-      width: 100%;
-      border: none;
-      text-align: left;
-      outline: none;
-      font-size: 15px;
-    }
-
-    .active,
-    .collapsible:hover {
-      background-color: #555;
-    }
-
-    .content {
-      padding: 0 18px;
-      display: none;
-      overflow: hidden;
-      background-color: #f1f1f1;
-    }
-    .questionBody{
-      background-color: skyblue;
-    }
-    .AllAnswers{
-          background-color: limegreen;
-    }
-
-    .answerComment{
-      background-color: seagreen;
-    }
-    .questionsComment{
-      background-color: darkorange;
-    }
-  </style>
+<link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
@@ -52,48 +15,103 @@
   </form>
   <br>
   <%const begin = Date.now();%>
-  <%for(var i=0; i< 20;i++){%>
-  <button type="button" class="collapsible">Title: <%= questionTitle[i]%>, Creation day: <%= new Date(creationDay[i]*1000) %>, Vote(s): <%= voteNum[i] %></button>
-  <div class="content">
-    <p class="questionBody"><b>Question body:</b> <%-questionBody[i]%>
 
+  <% for(var i=0;i< answers.length;i++) { %>
+      <button type="button" class="collapsible">Title: <%= questionTitle[i]%><br>Creation day: <%= new Date(creationDay[i]*1000) %><br>Vote(s): <%= voteNum[i] %></button>
+      <div class="content">
+        <p class="questionBody"><b>Question body:</b> <%-questionBody[i]%></p>
 
-            <% answers.forEach(function(answer) { %>
-              <%for(var j=0; j< answer.length;j++){%>
-                <%if(answer!="Not applicable"){%>
-                    <b class="AllAnswers">Question's answer</b><br>
-                   Creation date: <%=  new Date(answer[j].creation_date*1000);%><br>
-                   Vote(s): <%= answer[j].score%><br>
-                   Answer body: <%- answer[j].body%><br><br>
-                  <%if(answer[j].comments!=undefined){%>
-                       <%answer[j].comments.forEach(function(comment){%>
+        <%if(comments[i]!="Not applicable"){%>
+            <%comments[i].forEach( comment=>{%>
+                <p class="questionsComment"><b >Comments for the question:</b></p>
+              Creation date: <%= new Date(comment.creation_date*1000)%><br>
+                Vote(s): <%= comment.score%><br>
+                Comment body: <%- comment.body%><br>
+            <%})%>
+        <%}%>
 
-                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b class="answerComment">Answer's comment</b><br>
-                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creation date:<%= new Date(comment.creation_date*1000)%><br>
-                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vote(s): <%= comment.score%><br>
-                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer body: <%- comment.body%><br><br>
-                       <%})%>
+            <%if(answers[i]!="Not applicable"){%>
+                <%answers[i].forEach(answer =>{%>
+
+                  <p class="AllAnswers"><b>Question's answer</b></p>
+                  Creation date: <%=  new Date(answer.creation_date*1000);%><br>
+                  Vote(s): <%= answer.score%><br>
+                  Answer body: <%-answer.body%><br>
+
+                  <% if(answer.comments != undefined ){ %>
+                    <%answer.comments.forEach(comment=>{%>
+                       <p class="answerComment"><b >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer's comment</b></p>
+                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creation date:<%- new Date(comment.creation_date*1000)%><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vote(s): <%- comment.score%><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer body: <%- comment.body%><br>
+
+                    <%})%>
                   <%}%>
-                <%}%>
-              <%}%>
-             <%})%>
-
-
-         <% comments.forEach(function(comment) { %>
-           <%for(var l=0; l< comment.length;l++){%>
-             <%if(comment!="Not applicable"){%>
-               <b class = "questionsComment">Comments for the question:</b><br>
-                Creation date: <%= new Date(comment[l].creation_date*1000)%><br>
-                Vote(s): <%= comment[l].score%><br>
-                Comment body: <%- comment[l].body%><br><br>
-              <%}%>
+                <%})%>
             <%}%>
-          <%})%>
-      </p>
-      </div>
-    <%}%>
 
-    <p>Response time: <%=responseTime + Date.now()-begin%> ms</p>
+
+
+
+
+
+
+
+      </div>
+  <%}%>
+
+
+  <% for(var i=0;i< answers2.length;i++) { %>
+      <button type="button" class="collapsible">Title: <%= questionTitle2[i]%><br>Creation day: <%= new Date(creationDay2[i]*1000) %><br>Vote(s): <%= voteNum2[i] %></button>
+      <div class="content">
+        <p class="questionBody"><b>Question body:</b> <%-questionBody2[i]%></p>
+
+        <%if(comments2[i]!="Not applicable"){%>
+            <%comments2[i].forEach( comment2=>{%>
+                <p class="questionsComment"><b >Comments for the question:</b></p>
+                Creation date: <%= new Date(comment2.creation_date*1000)%><br>
+                Vote(s): <%= comment2.score%><br>
+                Comment body: <%- comment2.body%><br>
+            <%})%>
+        <%}%>
+
+            <%if(answers2[i]!="Not applicable"){%>
+                <%answers2[i].forEach(answer2 =>{%>
+
+                  <p class="AllAnswers"><b >Question's answer</b></p>
+                  Creation date: <%=  new Date(answer2.creation_date*1000);%><br>
+                  Vote(s): <%= answer2.score%><br>
+                  Answer body: <%-answer2.body%><br>
+
+                  <% if(answer2.comments != undefined ){ %>
+                    <%answer2.comments.forEach(comment2=>{%>
+                      <p class="answerComment"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer's comment</b></p>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creation date:<%- new Date(comment2.creation_date*1000)%><br>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vote(s): <%- comment2.score%><br>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer body: <%-comment2.body%><br>
+
+                    <%})%>
+                  <%}%>
+                <%})%>
+            <%}%>
+
+
+
+
+
+
+      </div>
+
+
+
+
+  <%}%>
+
+
+
+ <p>Response time: <%=responseTime + Date.now()-begin%> ms</p>
+
+
       <script>
         var coll = document.getElementsByClassName("collapsible");
         var i;
